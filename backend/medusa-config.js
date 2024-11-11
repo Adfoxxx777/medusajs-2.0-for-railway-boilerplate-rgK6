@@ -116,6 +116,7 @@ const medusaConfig = {
   ],
   plugins: [
     // 'medusa-fulfillment-manual'
+    `medusa-plugin-wishlist`
   ]
 };
 
