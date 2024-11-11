@@ -115,13 +115,13 @@ const medusaConfig = {
     }] : [])
   ],
   plugins: [
-    'medusa-fulfillment-manual',
-    {
-      resolve: 'medusa-plugin-wishlist',
-      options: {
-        enableUI: true
-      }
-    }
+    // 'medusa-fulfillment-manual',
+    // {
+    //   resolve: 'medusa-plugin-wishlist',
+    //   options: {
+    //     enableUI: true
+    //   }
+    // }
   ]
 };
 
