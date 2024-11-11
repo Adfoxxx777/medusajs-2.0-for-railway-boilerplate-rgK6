@@ -59,6 +59,9 @@ importers:
       express:
         specifier: ^4.21.1
         version: 4.21.1
+      medusa-plugin-wishlist:
+        specifier: ^1.1.44
+        version: 1.1.44(medusa-interfaces@1.3.10)
       medusajs-launch-utils:
         specifier: ^0.0.5
         version: 0.0.5
@@ -5495,6 +5498,20 @@ packages:
   media-typer@0.3.0:
     resolution: {integrity: sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==}
     engines: {node: '>= 0.6'}
+
+  medusa-core-utils@1.2.3:
+    resolution: {integrity: sha512-mNUqWh8G7BF9dcxt3t22GtSJrm4pfpU98QzvNgpqAvirVbBI4lOCpDQGoKE+jMHOLQJHrLQFoSJeqcofDJvEgA==}
+    engines: {node: '>=16'}
+
+  medusa-interfaces@1.3.10:
+    resolution: {integrity: sha512-S3J8+W/Wy5zoJML7P5mxGd9gRJTdMaRdpiPAhMeod8MmZGcTKpLRB1Ms8d2+pNDPhmoHJ69SAKaWRxp1w7eCUg==}
+    engines: {node: '>=16'}
+
+  medusa-plugin-wishlist@1.1.44:
+    resolution: {integrity: sha512-91KTIi6ShdBrcu9MNAtQuA7HQqlJ/gfr6ACmOwscQh1D7t5AO+GHbgFSQEz2s8d7tRp9s4YVV8j6vnh8apjVxw==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      medusa-interfaces: ^1.3.7
 
   medusajs-launch-utils@0.0.5:
     resolution: {integrity: sha512-w/RPlugfQ91Rz5aTwM7MVwDe3sRRmr6xQkmONtld28cu18GTE4buLr/+ZYO9CB013KPAM3L9iljlk+pXsCEgCA==}
@@ -13930,6 +13947,22 @@ snapshots:
   meant@1.0.3: {}
 
   media-typer@0.3.0: {}
+
+  medusa-core-utils@1.2.3:
+    dependencies:
+      awilix: 8.0.1
+
+  medusa-interfaces@1.3.10: {}
+
+  medusa-plugin-wishlist@1.1.44(medusa-interfaces@1.3.10):
+    dependencies:
+      body-parser: 1.20.3
+      cors: 2.8.5
+      express: 4.21.1
+      medusa-core-utils: 1.2.3
+      medusa-interfaces: 1.3.10
+    transitivePeerDependencies:
+      - supports-color
 
   medusajs-launch-utils@0.0.5:
     dependencies:
