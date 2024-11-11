@@ -16,7 +16,7 @@ import {
   STRIPE_API_KEY,
   STRIPE_WEBHOOK_SECRET,
   WORKER_MODE
-} from '@/lib/constants';
+} from "./src/lib/constants";
 
 loadEnv(process.env.NODE_ENV, process.cwd());
 
@@ -115,13 +115,14 @@ const medusaConfig = {
     }] : [])
   ],
   plugins: [
-    // 'medusa-fulfillment-manual'
+    'medusa-fulfillment-manual',
     {
-      resolve: `medusa-plugin-wishlist`,
-    },
-  
+      resolve: 'medusa-plugin-wishlist',
+      options: {
+        enableUI: true
+      }
+    }
   ]
 };
 
-// console.log(JSON.stringify(medusaConfig, null, 2));
 export default defineConfig(medusaConfig);
