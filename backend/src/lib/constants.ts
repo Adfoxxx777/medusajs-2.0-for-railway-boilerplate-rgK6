@@ -1,6 +1,6 @@
 import { loadEnv } from '@medusajs/utils'
 
-import { assertValue } from '@/utils/assert-value'
+import { assertValue } from '../utils/assert-value'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
@@ -79,6 +79,15 @@ export const RESEND_FROM_EMAIL = process.env.RESEND_FROM;
  */
 export const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 export const SENDGRID_FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL;
+
+/**
+ * SendPulse SMTP configuration
+ */
+export const SENDPULSE_SMTP_HOST = process.env.SENDPULSE_SMTP_HOST || 'smtp-pulse.com';
+export const SENDPULSE_SMTP_PORT = parseInt(process.env.SENDPULSE_SMTP_PORT || '587');
+export const SENDPULSE_SMTP_USER = process.env.SENDPULSE_SMTP_USER;
+export const SENDPULSE_SMTP_PASS = process.env.SENDPULSE_SMTP_PASS;
+export const SENDPULSE_FROM_EMAIL = process.env.SENDPULSE_FROM_EMAIL;
 
 /**
  * (optional) Stripe API key and webhook secret

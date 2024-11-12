@@ -15,7 +15,12 @@ import {
   STORE_CORS,
   STRIPE_API_KEY,
   STRIPE_WEBHOOK_SECRET,
-  WORKER_MODE
+  WORKER_MODE,
+  SENDPULSE_SMTP_HOST,
+  SENDPULSE_SMTP_PORT,
+  SENDPULSE_SMTP_USER,
+  SENDPULSE_SMTP_PASS,
+  SENDPULSE_FROM_EMAIL
 } from "./src/lib/constants";
 
 loadEnv(process.env.NODE_ENV, process.cwd());
@@ -25,7 +30,7 @@ const medusaConfig = {
     databaseUrl: DATABASE_URL,
     databaseLogging: true,
     redisUrl: REDIS_URL,
-    workerMode: WORKER_MODE,
+    workerMode: 'shared', // Устанавливаем режим shared для обработки событий
     http: {
       adminCors: ADMIN_CORS,
       authCors: AUTH_CORS,
@@ -40,89 +45,58 @@ const medusaConfig = {
   },
   modules: [
     {
-      key: Modules.FILE,
-      resolve: '@medusajs/file',
+      resolve: "@medusajs/medusa/file",
       options: {
         providers: [
           {
-            resolve: '@medusajs/file-local',
-            id: 'local',
+            resolve: "@medusajs/medusa/file-s3",
+            id: "spaces",
             options: {
-              upload_dir: 'static',
-              backend_url: `${BACKEND_URL}/static`
-            }
-          }
-        ]
-      }
-    },
-    ...(REDIS_URL ? [{
-      key: Modules.EVENT_BUS,
-      resolve: '@medusajs/event-bus-redis',
-      options: {
-        redisUrl: REDIS_URL
-      }
-    },
-    {
-      key: Modules.WORKFLOW_ENGINE,
-      resolve: '@medusajs/workflow-engine-redis',
-      options: {
-        redis: {
-          url: REDIS_URL,
-        }
-      }
-    }] : []),
-    ...(SENDGRID_API_KEY && SENDGRID_FROM_EMAIL || RESEND_API_KEY && RESEND_FROM_EMAIL ? [{
-      key: Modules.NOTIFICATION,
-      resolve: '@medusajs/notification',
-      options: {
-        providers: [
-          ...(SENDGRID_API_KEY && SENDGRID_FROM_EMAIL ? [{
-            resolve: '@medusajs/notification-sendgrid',
-            id: 'sendgrid',
-            options: {
-              channels: ['email'],
-              api_key: SENDGRID_API_KEY,
-              from: SENDGRID_FROM_EMAIL,
-            }
-          }] : []),
-          ...(RESEND_API_KEY && RESEND_FROM_EMAIL ? [{
-            resolve: './src/modules/email-notifications',
-            id: 'resend',
-            options: {
-              channels: ['email'],
-              api_key: RESEND_API_KEY,
-              from: RESEND_FROM_EMAIL,
-            },
-          }] : []),
-        ]
-      }
-    }] : []),
-    ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET ? [{
-      key: Modules.PAYMENT,
-      resolve: '@medusajs/payment',
-      options: {
-        providers: [
-          {
-            resolve: '@medusajs/payment-stripe',
-            id: 'stripe',
-            options: {
-              apiKey: STRIPE_API_KEY,
-              webhookSecret: STRIPE_WEBHOOK_SECRET,
+              file_url: process.env.SPACE_URL,
+              access_key_id: process.env.SPACE_ACCESS_KEY_ID,
+              secret_access_key: process.env.SPACE_SECRET_ACCESS_KEY,
+              region: process.env.SPACE_REGION,
+              bucket: process.env.SPACE_BUCKET,
+              endpoint: process.env.SPACE_ENDPOINT
             },
           },
         ],
       },
-    }] : [])
+    },
+    // Настройка EventBus для обработки событий
+    {
+      key: Modules.EVENT_BUS,
+      resolve: '@medusajs/event-bus-local', // Используем локальный event bus для разработки
+      options: {
+        subscriberLogging: true // Включаем логирование для subscriber'ов
+      }
+    },
+    // Настройка модуля уведомлений
+    {
+      key: Modules.NOTIFICATION,
+      resolve: '@medusajs/notification',
+      options: {
+        providers: [
+          {
+            resolve: './src/modules/email-notifications',
+            id: 'sendpulse',
+            options: {
+              channels: ['email'],
+              smtp_host: SENDPULSE_SMTP_HOST,
+              smtp_port: SENDPULSE_SMTP_PORT,
+              smtp_user: SENDPULSE_SMTP_USER,
+              smtp_password: SENDPULSE_SMTP_PASS,
+              from_email: SENDPULSE_FROM_EMAIL,
+            },
+          }
+        ]
+      }
+    }
   ],
-  plugins: [
-    // 'medusa-fulfillment-manual',
-    // {
-    //   resolve: 'medusa-plugin-wishlist',
-    //   options: {
-    //     enableUI: true
-    //   }
-    // }
-  ]
+  plugins: [],
+  featureFlags: {
+    medusa_v2: true
+  }
 };
 
 export default defineConfig(medusaConfig);

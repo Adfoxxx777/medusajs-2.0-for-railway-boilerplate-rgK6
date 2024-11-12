@@ -1,7 +1,7 @@
 import { ModuleProviderExports } from '@medusajs/types'
-import { ResendNotificationService } from './services/resend'
+import { SendPulseNotificationService } from './services/sendpulse-smtp'
 
-const services = [ResendNotificationService]
+const services = [SendPulseNotificationService]
 
 const providerExport: ModuleProviderExports = {
   services,
